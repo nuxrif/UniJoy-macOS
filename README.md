@@ -27,7 +27,6 @@
 ---
 
 ## 📸 স্ক্রিনশট
-*(এখানে অ্যাপের ছবিগুলো রাখার জন্য একটি `assets` ফোল্ডার তৈরি করে ছবিগুলো রাখুন)*
 <p align="center">
   <img src="assets/1-home.png" width="400" alt="Home Screen">
   <img src="assets/2-keyboard.png" width="400" alt="Keyboard View">
