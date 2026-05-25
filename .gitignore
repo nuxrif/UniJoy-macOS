@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Build outputs
+UniJoyApp/build/
+*.app
+*.dmg
+*.pkg
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+*.xcbkptlist
+*.xccheckout
+
+# Archives
+Archive.zip
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
