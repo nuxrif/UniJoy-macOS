@@ -62,15 +62,15 @@ struct SettingsView: View {
                     )
                     Divider().opacity(0.1)
                     settingsToggle(
-                        title: "চালু হলেই বাংলা সক্রিয়",
-                        description: "অ্যাপ চালু হলে স্বয়ংক্রিয়ভাবে বাংলা কীবোর্ড সক্রিয় হবে",
+                        title: "চালু হলেই ইউনিজয় সক্রিয়",
+                        description: "অ্যাপ চালু হলে স্বয়ংক্রিয়ভাবে ইউনিজয় কীবোর্ড সক্রিয় হবে",
                         icon: "power",
                         isOn: $autoSwitchOnLaunch
                     )
                     Divider().opacity(0.1)
                     settingsToggle(
                         title: "ভাষা সুইচ ওভারলে",
-                        description: "ভাষা পরিবর্তনে স্ক্রিনে En → বা দেখাবে",
+                        description: "ভাষা পরিবর্তনে স্ক্রিনে En → ইউ দেখাবে",
                         icon: "rectangle.center.inset.filled",
                         isOn: $showLanguageOverlay
                     )

@@ -37,8 +37,9 @@ class InputSourceMonitor: ObservableObject {
         if sourceID.lowercased().contains("unijoy") ||
            sourceID.lowercased().contains("bangla") ||
            sourceID.lowercased().contains("bengali") ||
-           sourceID.lowercased().contains("bn") {
-            return "বা"
+           sourceID.lowercased().contains("bn") ||
+           sourceID.contains("ইউনিজয়") {
+            return "ইউ"
         }
         return "En"
     }

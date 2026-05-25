@@ -91,7 +91,7 @@ struct InstallView: View {
                     }
                 }
                 .padding(18)
-                .frame(maxWidth: 460)
+                .frame(width: 480)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
                         .fill(Color.white.opacity(0.03))
@@ -102,86 +102,79 @@ struct InstallView: View {
                 )
                 
                 // Action Buttons
-                VStack(spacing: 8) {
-                    HStack(spacing: 16) {
-                        if !manager.isInstalled {
-                            actionButton(
-                                title: "⚡ ওয়ান-ক্লিক ইনস্টল",
-                                icon: "bolt.circle.fill",
-                                gradient: [Color(red: 0.2, green: 0.7, blue: 0.4), Color(red: 0.1, green: 0.5, blue: 0.3)],
-                                isLoading: manager.isProcessing
-                            ) {
+                HStack(spacing: 10) {
+                    if !manager.isInstalled {
+                        actionButton(
+                            title: "⚡ ওয়ান-ক্লিক ইনস্টল",
+                            icon: "bolt.circle.fill",
+                            gradient: [Color(red: 0.2, green: 0.7, blue: 0.4), Color(red: 0.1, green: 0.5, blue: 0.3)],
+                            isLoading: manager.isProcessing
+                        ) {
+                            manager.install()
+                        }
+                    } else {
+                        actionButton(
+                            title: "আনইনস্টল",
+                            icon: "trash.circle.fill",
+                            gradient: [Color(red: 0.8, green: 0.2, blue: 0.2), Color(red: 0.6, green: 0.1, blue: 0.1)],
+                            isLoading: manager.isProcessing
+                        ) {
+                            manager.uninstall()
+                        }
+                        
+                        actionButton(
+                            title: "পুনরায় ইনস্টল",
+                            icon: "arrow.triangle.2.circlepath",
+                            gradient: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.4, green: 0.2, blue: 0.9)],
+                            isLoading: false
+                        ) {
+                            manager.uninstall()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                 manager.install()
                             }
-                        } else {
-                            actionButton(
-                                title: "আনইনস্টল",
-                                icon: "trash.circle.fill",
-                                gradient: [Color(red: 0.8, green: 0.2, blue: 0.2), Color(red: 0.6, green: 0.1, blue: 0.1)],
-                                isLoading: manager.isProcessing
-                            ) {
-                                manager.uninstall()
-                            }
-                            
-                            actionButton(
-                                title: "পুনরায় ইনস্টল",
-                                icon: "arrow.triangle.2.circlepath",
-                                gradient: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.4, green: 0.2, blue: 0.9)],
-                                isLoading: false
-                            ) {
-                                manager.uninstall()
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                    manager.install()
-                                }
-                            }
                         }
-                    }
-                    
-                    // Quick Switch Button
-                    if manager.isInstalled {
-                        HStack(spacing: 12) {
-                            Button(action: { manager.switchToBangla() }) {
-                                HStack(spacing: 8) {
-                                    Text("ক")
-                                        .font(.system(size: 14, weight: .bold))
-                                    Text("বাংলায় সুইচ করুন")
-                                        .font(.system(size: 11, weight: .medium))
-                                }
-                                .foregroundColor(Color(red: 0.5, green: 0.7, blue: 1.0))
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 7)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.1))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.2), lineWidth: 1)
-                                        )
-                                )
+                        
+                        Button(action: { manager.switchToBangla() }) {
+                            HStack(spacing: 6) {
+                                Text("ক")
+                                    .font(.system(size: 13, weight: .bold))
+                                Text("সুইচ করুন")
+                                    .font(.system(size: 11, weight: .medium))
                             }
-                            .buttonStyle(.plain)
-                            
-                            Button(action: { manager.openKeyboardPreferences() }) {
-                                HStack(spacing: 8) {
-                                    Image(systemName: "gear")
-                                        .font(.system(size: 12))
-                                    Text("System Settings")
-                                        .font(.system(size: 11, weight: .medium))
-                                }
-                                .foregroundColor(.white.opacity(0.5))
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 7)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.white.opacity(0.04))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                                        )
-                                )
-                            }
-                            .buttonStyle(.plain)
+                            .foregroundColor(Color(red: 0.5, green: 0.7, blue: 1.0))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.1))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.2), lineWidth: 1)
+                                    )
+                            )
                         }
+                        .buttonStyle(.plain)
+                        
+                        Button(action: { manager.openKeyboardPreferences() }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "gear")
+                                    .font(.system(size: 11))
+                                Text("Settings")
+                                    .font(.system(size: 11, weight: .medium))
+                            }
+                            .foregroundColor(.white.opacity(0.5))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white.opacity(0.04))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                                    )
+                            )
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 
@@ -201,7 +194,7 @@ struct InstallView: View {
                             .lineSpacing(3)
                     }
                     .padding(16)
-                    .frame(maxWidth: 520)
+                    .frame(width: 480)
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white.opacity(0.04))
@@ -216,7 +209,7 @@ struct InstallView: View {
                 
                 // What happens automatically
                 autoStepsSection
-                    .padding(.horizontal, 40)
+                    .frame(width: 480)
                 
                 // Reopen welcome
                 Button(action: reopenWelcome) {
@@ -330,8 +323,8 @@ struct InstallView: View {
                     .font(.system(size: 12, weight: .semibold))
             }
             .foregroundColor(.white)
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(LinearGradient(colors: gradient, startPoint: .leading, endPoint: .trailing))
@@ -355,7 +348,7 @@ struct InstallView: View {
             
             stepItem(number: "1", text: "কীবোর্ড লেআউট ফাইল সিস্টেমে কপি হয়", icon: "doc.fill", done: manager.isInstalled)
             stepItem(number: "2", text: "macOS-এ ইনপুট সোর্স রেজিস্টার হয়", icon: "square.and.pencil", done: manager.isInstalled)
-            stepItem(number: "3", text: "বাংলা কীবোর্ড অটো সক্রিয় হয়", icon: "power", done: manager.isInputSourceEnabled)
+            stepItem(number: "3", text: "ইউনিজয় কীবোর্ড অটো সক্রিয় হয়", icon: "power", done: manager.isInputSourceEnabled)
             stepItem(number: "4", text: "মেনু বারে 🌐 দিয়ে সুইচ করুন!", icon: "globe", done: false)
         }
         .padding(20)

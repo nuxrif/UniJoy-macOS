@@ -33,8 +33,8 @@ cp "$RESOURCES_DIR/Info.plist" "$BUNDLE_PATH/Contents/"
 
 # Copy keyboard layout files into app bundle
 echo "📋 Copying keyboard layout files..."
-cp "$PROJECT_ROOT/UniJoy.keylayout" "$BUNDLE_PATH/Contents/Resources/"
-cp "$PROJECT_ROOT/UniJoy.icns" "$BUNDLE_PATH/Contents/Resources/"
+cp "$PROJECT_ROOT/UniJoyLayout.keylayout" "$BUNDLE_PATH/Contents/Resources/"
+cp "$PROJECT_ROOT/UniJoyLayout.icns" "$BUNDLE_PATH/Contents/Resources/"
 
 # Also use proper app icon
 cp "$RESOURCES_DIR/AppIcon.icns" "$BUNDLE_PATH/Contents/Resources/AppIcon.icns"

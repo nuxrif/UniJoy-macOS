@@ -10,11 +10,11 @@ class KeyboardLayoutManager: ObservableObject {
     @Published var statusMessage: String = ""
     @Published var isProcessing: Bool = false
     
-    private let keylayoutFileName = "UniJoy.keylayout"
-    private let icnsFileName = "UniJoy.icns"
+    private let keylayoutFileName = "UniJoyLayout.keylayout"
+    private let icnsFileName = "UniJoyLayout.icns"
     private let systemKeyboardLayoutsPath = "/Library/Keyboard Layouts"
     private let userKeyboardLayoutsPath: String
-    private let inputSourceID = "com.apple.keyboardlayout.বাংলা"
+    private let inputSourceID = "org.unknown.keylayout.ইউনিজয়"
     
     init() {
         self.userKeyboardLayoutsPath = NSHomeDirectory() + "/Library/Keyboard Layouts"
@@ -111,14 +111,14 @@ class KeyboardLayoutManager: ObservableObject {
             }
             
             // Check if this is our custom UniJoy keyboard
-            if sourceID.contains("keyboardlayout") && (sourceID.contains("বাংলা") || sourceID.contains("UniJoy")) {
+            if sourceID.contains("keyboardlayout") && (sourceID.contains("বাংলা") || sourceID.contains("UniJoy") || sourceID.contains("ইউনিজয়")) {
                 return source
             }
             
             // Also match by localized name for non-Apple sources
             if let namePtr = TISGetInputSourceProperty(source, kTISPropertyLocalizedName) {
                 let name = Unmanaged<CFString>.fromOpaque(namePtr).takeUnretainedValue() as String
-                if name == "বাংলা" && !sourceID.hasPrefix("com.apple.") {
+                if (name == "বাংলা" || name == "ইউনিজয়") && !sourceID.hasPrefix("com.apple.") {
                     return source
                 }
             }
@@ -200,7 +200,7 @@ class KeyboardLayoutManager: ObservableObject {
             }
             
             // Step 2: Register the input source
-            let registered = self.registerInputSource(from: destDir)
+            let _ = self.registerInputSource(from: destDir)
             
             // Small delay to let the system pick up the new source
             Thread.sleep(forTimeInterval: 1.0)
@@ -233,7 +233,7 @@ class KeyboardLayoutManager: ObservableObject {
                 self.enableLoginItem()
                 
                 if enabled && selected {
-                    statusMessage = "✅ সম্পূর্ণ অটো-ইনস্টল সফল! বাংলা কীবোর্ড এখন সক্রিয়। Login Items এ যোগ হয়েছে।"
+                    statusMessage = "✅ সম্পূর্ণ অটো-ইনস্টল সফল! ইউনিজয় কীবোর্ড এখন সক্রিয়। Login Items এ যোগ হয়েছে।"
                 } else if enabled {
                     statusMessage = "✅ কীবোর্ড ইনস্টল ও সক্রিয় হয়েছে! মেনু বারে 🌐 Globe কী দিয়ে সুইচ করুন।"
                 } else {
@@ -250,7 +250,7 @@ class KeyboardLayoutManager: ObservableObject {
                     // Fallback — files are installed, just needs logout
                     isInstalled = true
                     isProcessing = false
-                    statusMessage = "✅ ফাইল ইনস্টল হয়েছে! সম্পূর্ণ সক্রিয় করতে একবার লগ-আউট করে লগ-ইন করুন, তারপর মেনু বারে বাংলা দেখাবে।"
+                    statusMessage = "✅ ফাইল ইনস্টল হয়েছে! সম্পূর্ণ সক্রিয় করতে একবার লগ-আউট করে লগ-ইন করুন, তারপর মেনু বারে ইউনিজয় দেখাবে।"
                 }
             }
         }
@@ -356,9 +356,9 @@ class KeyboardLayoutManager: ObservableObject {
     func switchToBangla() {
         if let source = findUniJoyInputSource() {
             let _ = selectInputSource(source)
-            statusMessage = "✅ বাংলা কীবোর্ড সক্রিয় করা হয়েছে!"
+            statusMessage = "✅ ইউনিজয় কীবোর্ড সক্রিয় করা হয়েছে!"
         } else {
-            statusMessage = "⚠️ বাংলা কীবোর্ড পাওয়া যায়নি। আগে ইনস্টল করুন।"
+            statusMessage = "⚠️ ইউনিজয় কীবোর্ড পাওয়া যায়নি। আগে ইনস্টল করুন।"
         }
     }
 }

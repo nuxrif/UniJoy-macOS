@@ -12,7 +12,7 @@ struct HelpView: View {
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.white)
                     
-                    Text("UniJoy বাংলা কীবোর্ড ব্যবহারের সম্পূর্ণ গাইড")
+                    Text("UniJoy কীবোর্ড ব্যবহারের সম্পূর্ণ গাইড")
                         .font(.system(size: 13))
                         .foregroundColor(.white.opacity(0.5))
                 }
@@ -23,7 +23,7 @@ struct HelpView: View {
                     sectionHeader("দ্রুত টিপস", icon: "lightbulb.fill")
                     
                     tipCard(icon: "keyboard", title: "কীবোর্ড সুইচ",
-                        description: "Globe (🌐) কী বা Control+Space চেপে বাংলা ↔ ইংরেজি সুইচ করুন")
+                        description: "Globe (🌐) কী বা Control+Space চেপে ইউনিজয় ↔ ইংরেজি সুইচ করুন")
                     tipCard(icon: "textformat", title: "যুক্তবর্ণ লেখা",
                         description: "প্রথম অক্ষর + G (হসন্ত) + দ্বিতীয় অক্ষর = যুক্তবর্ণ। যেমন: ক + G + ত = ক্ত")
                     tipCard(icon: "character.textbox", title: "র-ফলা (্র)",
@@ -40,8 +40,8 @@ struct HelpView: View {
                     sectionHeader("সাধারণ প্রশ্ন", icon: "questionmark.bubble")
                     
                     faqItem(
-                        question: "ইনস্টল করার পরেও বাংলা কীবোর্ড দেখাচ্ছে না?",
-                        answer: "System Settings → Keyboard → Input Sources এ গিয়ে '+' ক্লিক করে 'Other' থেকে 'বাংলা' যোগ করুন। কিছু ক্ষেত্রে লগ আউট করে আবার লগ ইন করতে হতে পারে।",
+                        question: "ইনস্টল করার পরেও ইউনিজয় কীবোর্ড দেখাচ্ছে না?",
+                        answer: "System Settings → Keyboard → Input Sources এ গিয়ে '+' ক্লিক করে 'Other' থেকে 'ইউনিজয়' যোগ করুন। কিছু ক্ষেত্রে লগ আউট করে আবার লগ ইন করতে হতে পারে।",
                         id: "faq1"
                     )
                     faqItem(

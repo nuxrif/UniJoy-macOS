@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         DispatchQueue.main.async {
             if let window = NSApplication.shared.windows.first {
                 window.center()
-                window.title = "UniJoy — বাংলা কীবোর্ড"
+                window.title = "UniJoy — ইউনিজয় কীবোর্ড"
                 window.appearance = NSAppearance(named: .darkAqua)
                 window.titlebarAppearsTransparent = true
                 window.backgroundColor = NSColor(red: 0.05, green: 0.05, blue: 0.09, alpha: 1.0)

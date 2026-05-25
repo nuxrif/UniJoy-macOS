@@ -72,7 +72,7 @@ echo "🎨 Creating distribution..."
 cat > "$BUILD_DIR/distribution.xml" << DIST
 <?xml version="1.0" encoding="utf-8"?>
 <installer-gui-script minSpecVersion="2">
-    <title>UniJoy — বাংলা কীবোর্ড</title>
+    <title>UniJoy — ইউনিজয় কীবোর্ড</title>
     <welcome file="welcome.html" mime-type="text/html"/>
     <conclusion file="conclusion.html" mime-type="text/html"/>
     <options customize="never" require-scripts="false" hostArchitectures="x86_64,arm64"/>
@@ -107,7 +107,7 @@ cat > "$BUILD_DIR/pkg_resources/welcome.html" << 'HTML'
 </style>
 </head>
 <body>
-    <h1>UniJoy — বাংলা কীবোর্ড for macOS</h1>
+    <h1>UniJoy — ইউনিজয় কীবোর্ড for macOS</h1>
     <p class="bengali">macOS-এ সবচেয়ে সহজ বাংলা লেখার উপায়!</p>
     
     <ul class="features">
@@ -140,7 +140,7 @@ cat > "$BUILD_DIR/pkg_resources/conclusion.html" << 'HTML'
     <ol class="steps">
         <li>Applications থেকে UniJoy ওপেন করুন</li>
         <li>"ইনস্টল ও শুরু করুন" বাটনে ক্লিক করুন</li>
-        <li>Globe (🌐) কী চেপে বাংলা ↔ ইংরেজি সুইচ করুন</li>
+        <li>Globe (🌐) কী চেপে ইউনিজয় ↔ ইংরেজি সুইচ করুন</li>
     </ol>
     
     <p>🎉 এখন থেকে আপনি macOS-এ বাংলা টাইপ করতে পারবেন!</p>

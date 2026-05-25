@@ -82,7 +82,7 @@ struct ContentView: View {
                 Text("UniJoy")
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
-                Text("বাংলা কীবোর্ড")
+                Text("ইউনিজয় কীবোর্ড")
                     .font(.system(size: 10, weight: .medium))
                     .foregroundColor(.white.opacity(0.5))
             }

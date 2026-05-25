@@ -17,7 +17,7 @@ struct KeyboardView: View {
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.white)
                     
-                    Text("UniJoy বাংলা কীবোর্ডের সম্পূর্ণ লেআউট")
+                    Text("UniJoy কীবোর্ডের সম্পূর্ণ লেআউট")
                         .font(.system(size: 13))
                         .foregroundColor(.white.opacity(0.5))
                 }
@@ -239,7 +239,7 @@ struct KeyboardView: View {
                     .font(.system(size: 10))
                     .foregroundColor(.white.opacity(0.25))
                 Spacer()
-                Text("Globe 🌐 বা শর্টকাট দিয়ে বাংলা কীবোর্ডে সুইচ করুন")
+                Text("Globe 🌐 বা শর্টকাট দিয়ে ইউনিজয় কীবোর্ডে সুইচ করুন")
                     .font(.system(size: 10))
                     .foregroundColor(.white.opacity(0.2))
             }

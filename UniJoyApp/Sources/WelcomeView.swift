@@ -8,7 +8,7 @@ struct WelcomeView: View {
     @State private var isInstalling = false
     
     let steps = [
-        ("hand.wave.fill", "স্বাগতম!", "UniJoy বাংলা কীবোর্ড — macOS-এ সবচেয়ে সহজ বাংলা লেখার উপায়।"),
+        ("hand.wave.fill", "স্বাগতম!", "UniJoy কীবোর্ড — macOS-এ সবচেয়ে সহজ বাংলা লেখার উপায়।"),
         ("keyboard.fill", "ইউনিজয় লেআউট", "জনপ্রিয় ইউনিজয় লেআউট — ফোনেটিক নয়, ফিক্সড পজিশন। একবার শিখলে দ্রুততম বাংলা টাইপিং!"),
         ("bolt.circle.fill", "ওয়ান-ক্লিক সেটআপ", "নিচের বাটনে ক্লিক করুন — বাকি সব অটোমেটিক!")
     ]
