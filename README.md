@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="UniJoyApp/Resources/AppIcon.icns" width="128" alt="UniJoy Logo">
+  <img src="assets/app-icon.png" width="128" alt="UniJoy Logo">
   <h1>UniJoy-macOS</h1>
   <p><strong>macOS-এ বাংলা লেখার জন্য একটি নেটিভ কীবোর্ড লেআউট</strong></p>
 
