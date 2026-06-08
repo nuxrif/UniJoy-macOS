@@ -125,7 +125,7 @@ UniJoy-macOS/
 
 ## ক্রেডিট
 
-- **macOS অ্যাপ ডেভেলপমেন্ট:** [Sharif Ahammad](https://sharif.bd)
+- **macOS অ্যাপ ডেভেলপমেন্ট:** [Sharif Ahammed](https://sharif.bd)
 - **মূল লেআউট ডিজাইন:** S. M. Raiyan Kabir
 - **রেফারেন্স:** [ekushey.org](https://ekushey.org)
 
