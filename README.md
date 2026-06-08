@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/app-icon.png" width="128" alt="UniJoy Logo">
+  <img src="assets/app-icon.png?v=2" width="128" alt="UniJoy Logo">
   <h1>UniJoy-macOS</h1>
   <p><strong>macOS-এ বাংলা লেখার জন্য একটি নেটিভ কীবোর্ড লেআউট</strong></p>
 
@@ -35,8 +35,8 @@ UniJoy-macOS তৈরি করা হয়েছে একটাই উদ্
 ## স্ক্রিনশট
 
 <p align="center">
-  <img src="assets/1-home.png" width="400" alt="Home Screen">
-  <img src="assets/2-keyboard.png" width="400" alt="Keyboard View">
+  <img src="assets/1-home.png?v=2" width="400" alt="Home Screen">
+  <img src="assets/2-keyboard.png?v=2" width="400" alt="Keyboard View">
 </p>
 
 ---
