@@ -3,9 +3,12 @@ import SwiftUI
 struct WelcomeView: View {
     @Binding var showWelcome: Bool
     @ObservedObject var manager: KeyboardLayoutManager
+    @EnvironmentObject var themeManager: ThemeManager
     @State private var currentStep = 0
     @State private var animateIn = false
     @State private var isInstalling = false
+    
+    var t: TC { TC(isDark: themeManager.isDark) }
     
     let steps = [
         ("hand.wave.fill", "স্বাগতম!", "UniJoy কীবোর্ড — macOS-এ সবচেয়ে সহজ বাংলা লেখার উপায়।"),
@@ -15,49 +18,24 @@ struct WelcomeView: View {
     
     var body: some View {
         ZStack {
-            // Background
-            Color(nsColor: NSColor(red: 0.05, green: 0.05, blue: 0.09, alpha: 1.0))
+            // Background — warm overlay
+            Color.black.opacity(0.5)
                 .ignoresSafeArea()
             
-            // Gradient orbs
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.15), .clear],
-                        center: .center, startRadius: 0, endRadius: 300
-                    )
-                )
-                .frame(width: 600, height: 600)
-                .offset(x: -200, y: -200)
-            
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [Color(red: 0.6, green: 0.2, blue: 0.9).opacity(0.1), .clear],
-                        center: .center, startRadius: 0, endRadius: 250
-                    )
-                )
-                .frame(width: 500, height: 500)
-                .offset(x: 200, y: 200)
-            
+            // Main card
             VStack(spacing: 0) {
                 Spacer()
                 
-                // Logo
+                // Logo — warm vermilion style
                 ZStack {
                     RoundedRectangle(cornerRadius: 24)
-                        .fill(
-                            LinearGradient(
-                                colors: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.4, green: 0.2, blue: 0.9)],
-                                startPoint: .topLeading, endPoint: .bottomTrailing
-                            )
-                        )
+                        .fill(t.accent)
                         .frame(width: 80, height: 80)
-                        .shadow(color: Color(red: 0.3, green: 0.4, blue: 1.0).opacity(0.5), radius: 20, x: 0, y: 8)
+                        .shadow(color: t.accent.opacity(0.4), radius: 20, x: 0, y: 8)
                     
                     Text("ক")
                         .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(t.accentInk)
                 }
                 .scaleEffect(animateIn ? 1.0 : 0.5)
                 .opacity(animateIn ? 1.0 : 0)
@@ -68,16 +46,16 @@ struct WelcomeView: View {
                 VStack(spacing: 12) {
                     Image(systemName: steps[currentStep].0)
                         .font(.system(size: 28))
-                        .foregroundColor(Color(red: 0.5, green: 0.7, blue: 1.0))
+                        .foregroundColor(t.accent)
                         .padding(.bottom, 4)
                     
                     Text(steps[currentStep].1)
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(t.ink)
                     
                     Text(steps[currentStep].2)
                         .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.5))
+                        .foregroundColor(t.inkSoft)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 400)
                         .lineSpacing(4)
@@ -94,7 +72,7 @@ struct WelcomeView: View {
                 HStack(spacing: 8) {
                     ForEach(0..<steps.count, id: \.self) { i in
                         Circle()
-                            .fill(i == currentStep ? Color(red: 0.3, green: 0.6, blue: 1.0) : Color.white.opacity(0.15))
+                            .fill(i == currentStep ? t.accent : t.line)
                             .frame(width: i == currentStep ? 10 : 6, height: i == currentStep ? 10 : 6)
                             .animation(.easeInOut(duration: 0.2), value: currentStep)
                     }
@@ -116,12 +94,13 @@ struct WelcomeView: View {
                                 Text("পিছনে")
                                     .font(.system(size: 13, weight: .medium))
                             }
-                            .foregroundColor(.white.opacity(0.5))
+                            .foregroundColor(t.inkSoft)
                             .padding(.horizontal, 24)
                             .padding(.vertical, 12)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.white.opacity(0.06))
+                                    .fill(t.panel2)
+                                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(t.line, lineWidth: 1))
                             )
                         }
                         .buttonStyle(.plain)
@@ -139,18 +118,13 @@ struct WelcomeView: View {
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: 12, weight: .semibold))
                             }
-                            .foregroundColor(.white)
+                            .foregroundColor(t.accentInk)
                             .padding(.horizontal, 28)
                             .padding(.vertical, 12)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.4, green: 0.2, blue: 0.9)],
-                                            startPoint: .leading, endPoint: .trailing
-                                        )
-                                    )
-                                    .shadow(color: Color(red: 0.3, green: 0.5, blue: 1.0).opacity(0.3), radius: 8, x: 0, y: 4)
+                                    .fill(t.accent)
+                                    .shadow(color: t.accent.opacity(0.3), radius: 8, x: 0, y: 4)
                             )
                         }
                         .buttonStyle(.plain)
@@ -176,7 +150,7 @@ struct WelcomeView: View {
                                     ProgressView()
                                         .progressViewStyle(.circular)
                                         .scaleEffect(0.6)
-                                        .tint(.white)
+                                        .tint(t.accentInk)
                                 } else {
                                     Image(systemName: manager.isInstalled ? "checkmark.circle.fill" : "bolt.circle.fill")
                                         .font(.system(size: 16))
@@ -184,20 +158,13 @@ struct WelcomeView: View {
                                 Text(manager.isInstalled ? "শুরু করুন ✨" : "⚡ ইনস্টল ও শুরু করুন")
                                     .font(.system(size: 14, weight: .semibold))
                             }
-                            .foregroundColor(.white)
+                            .foregroundColor(manager.isInstalled ? .white : t.accentInk)
                             .padding(.horizontal, 32)
                             .padding(.vertical, 14)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(
-                                        LinearGradient(
-                                            colors: manager.isInstalled ?
-                                                [Color(red: 0.2, green: 0.7, blue: 0.4), Color(red: 0.1, green: 0.5, blue: 0.3)] :
-                                                [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.4, green: 0.2, blue: 0.9)],
-                                            startPoint: .leading, endPoint: .trailing
-                                        )
-                                    )
-                                    .shadow(color: Color(red: 0.3, green: 0.5, blue: 1.0).opacity(0.4), radius: 12, x: 0, y: 6)
+                                    .fill(manager.isInstalled ? t.good : t.accent)
+                                    .shadow(color: (manager.isInstalled ? t.good : t.accent).opacity(0.4), radius: 12, x: 0, y: 6)
                             )
                         }
                         .buttonStyle(.plain)
@@ -216,13 +183,15 @@ struct WelcomeView: View {
                     }) {
                         Text("স্কিপ করুন")
                             .font(.system(size: 12))
-                            .foregroundColor(.white.opacity(0.25))
+                            .foregroundColor(t.inkFaint)
                     }
                     .buttonStyle(.plain)
                 }
                 
                 Spacer()
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(t.winBg)
         }
         .onAppear {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {

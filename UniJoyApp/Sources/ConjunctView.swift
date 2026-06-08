@@ -1,13 +1,15 @@
 import SwiftUI
 
 struct ConjunctView: View {
+    @EnvironmentObject var themeManager: ThemeManager
     @State private var searchText: String = ""
     @State private var selectedCategory: String = "সব"
+    
+    var t: TC { TC(isDark: themeManager.isDark) }
     
     let categories = ["সব", "ক-গ্রুপ", "চ-গ্রুপ", "ট-গ্রুপ", "ত-গ্রুপ", "প-গ্রুপ", "অন্যান্য"]
     
     let conjuncts: [(String, String, String, String)] = [
-        // (যুক্তবর্ণ, কী কম্বো, উচ্চারণ, গ্রুপ)
         ("ক্ক", "J + G + J", "ক্ক (পাক্কা)", "ক-গ্রুপ"),
         ("ক্ত", "J + G + L", "ক্ত (শক্ত)", "ক-গ্রুপ"),
         ("ক্ট", "J + G + T", "ক্ট (ডক্টর)", "ক-গ্রুপ"),
@@ -21,7 +23,6 @@ struct ConjunctView: View {
         ("ঘ্র", "Shift+O + Z", "ঘ্র (ঘ্রাণ)", "ক-গ্রুপ"),
         ("ঙ্ক", "Shift+Q + G + J", "ঙ্ক (অঙ্ক)", "ক-গ্রুপ"),
         ("ঙ্গ", "Shift+Q + G + O", "ঙ্গ (বাঙ্গালি)", "ক-গ্রুপ"),
-        
         ("চ্চ", "Y + G + Y", "চ্চ (বাচ্চা)", "চ-গ্রুপ"),
         ("চ্ছ", "Y + G + Shift+Y", "চ্ছ (ইচ্ছা)", "চ-গ্রুপ"),
         ("জ্জ", "U + G + U", "জ্জ (হজ্জ)", "চ-গ্রুপ"),
@@ -29,13 +30,11 @@ struct ConjunctView: View {
         ("জ্র", "U + Z", "জ্র (বজ্র)", "চ-গ্রুপ"),
         ("ঞ্চ", "Shift+I + G + Y", "ঞ্চ (কাঞ্চন)", "চ-গ্রুপ"),
         ("ঞ্জ", "Shift+I + G + U", "ঞ্জ (গঞ্জ)", "চ-গ্রুপ"),
-        
         ("ট্ট", "T + G + T", "ট্ট (চট্টগ্রাম)", "ট-গ্রুপ"),
         ("ড্র", "E + Z", "ড্র (ড্রাইভার)", "ট-গ্রুপ"),
         ("ণ্ড", "Shift+B + G + E", "ণ্ড (ণ্ড)", "ট-গ্রুপ"),
         ("ণ্ট", "Shift+B + G + T", "ণ্ট (ঘণ্টা)", "ট-গ্রুপ"),
         ("ণ্ঠ", "Shift+B + G + Shift+T", "ণ্ঠ (কণ্ঠ)", "ট-গ্রুপ"),
-        
         ("ত্ত", "L + G + L", "ত্ত (উত্তর)", "ত-গ্রুপ"),
         ("ত্র", "L + Z", "ত্র (ত্রাণ)", "ত-গ্রুপ"),
         ("ত্থ", "L + G + Shift+L", "ত্থ (উত্থান)", "ত-গ্রুপ"),
@@ -48,7 +47,6 @@ struct ConjunctView: View {
         ("ন্ধ", "B + G + Shift+K", "ন্ধ (অন্ধ)", "ত-গ্রুপ"),
         ("ন্ন", "B + G + B", "ন্ন (অন্ন)", "ত-গ্রুপ"),
         ("ন্র", "B + Z", "ন্র (হেন্‌রি)", "ত-গ্রুপ"),
-        
         ("প্প", "R + G + R", "প্প (গোষ্ঠীপ্প)", "প-গ্রুপ"),
         ("প্র", "R + Z", "প্র (প্রেম)", "প-গ্রুপ"),
         ("প্ত", "R + G + L", "প্ত (সপ্তম)", "প-গ্রুপ"),
@@ -58,7 +56,6 @@ struct ConjunctView: View {
         ("ম্ব", "Shift+M + G + H", "ম্ব (লম্বা)", "প-গ্রুপ"),
         ("ম্ম", "Shift+M + G + Shift+M", "ম্ম (সম্মান)", "প-গ্রুপ"),
         ("ম্র", "Shift+M + Z", "ম্র (নম্র)", "প-গ্রুপ"),
-        
         ("শ্র", "Shift+N + Z", "শ্র (শ্রম)", "অন্যান্য"),
         ("স্র", "M + Z", "স্র (স্রোত)", "অন্যান্য"),
         ("স্ত", "M + G + L", "স্ত (বিস্তার)", "অন্যান্য"),
@@ -76,8 +73,8 @@ struct ConjunctView: View {
     var filteredConjuncts: [(String, String, String, String)] {
         conjuncts.filter { item in
             let matchCategory = selectedCategory == "সব" || item.3 == selectedCategory
-            let matchSearch = searchText.isEmpty || 
-                item.0.contains(searchText) || 
+            let matchSearch = searchText.isEmpty ||
+                item.0.contains(searchText) ||
                 item.2.localizedCaseInsensitiveContains(searchText) ||
                 item.1.localizedCaseInsensitiveContains(searchText)
             return matchCategory && matchSearch
@@ -85,142 +82,108 @@ struct ConjunctView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Header
-                VStack(spacing: 6) {
-                    Text("যুক্তবর্ণ চার্ট")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.white)
-                    
-                    Text("সব যুক্তবর্ণ ও তাদের কী কম্বিনেশন")
-                        .font(.system(size: 13))
-                        .foregroundColor(.white.opacity(0.5))
+        VStack(alignment: .leading, spacing: 0) {
+            // Search bar
+            HStack(spacing: 10) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 14))
+                    .foregroundColor(t.inkFaint)
+                TextField("যুক্তবর্ণ খুঁজুন...", text: $searchText)
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 14))
+                    .foregroundColor(t.ink)
+                if !searchText.isEmpty {
+                    Button(action: { searchText = "" }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 13))
+                            .foregroundColor(t.inkFaint)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .padding(.top, 28)
-                
-                // Search bar
-                HStack(spacing: 10) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 13))
-                        .foregroundColor(.white.opacity(0.3))
-                    
-                    TextField("যুক্তবর্ণ খুঁজুন...", text: $searchText)
-                        .textFieldStyle(.plain)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white)
-                    
-                    if !searchText.isEmpty {
-                        Button(action: { searchText = "" }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 13))
-                                .foregroundColor(.white.opacity(0.3))
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 9)
+            .background(
+                RoundedRectangle(cornerRadius: 11)
+                    .fill(t.panel)
+                    .overlay(RoundedRectangle(cornerRadius: 11).stroke(t.line, lineWidth: 1))
+            )
+            .frame(maxWidth: 560)
+            .padding(.bottom, 16)
+            
+            // Category pills
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(categories, id: \.self) { cat in
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.15)) { selectedCategory = cat }
+                        }) {
+                            Text(cat)
+                                .font(.system(size: 13, weight: selectedCategory == cat ? .semibold : .medium))
+                                .foregroundColor(selectedCategory == cat ? t.accentInk : t.inkSoft)
+                                .padding(.horizontal, 15)
+                                .padding(.vertical, 7)
+                                .background(
+                                    Capsule()
+                                        .fill(selectedCategory == cat ? t.accent : t.panel)
+                                        .overlay(
+                                            Capsule().stroke(selectedCategory == cat ? t.accent : t.line, lineWidth: 1)
+                                        )
+                                )
                         }
                         .buttonStyle(.plain)
                     }
                 }
-                .padding(10)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white.opacity(0.06))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                        )
-                )
-                .frame(maxWidth: 500)
-                
-                // Category pills
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(categories, id: \.self) { cat in
-                            Button(action: {
-                                withAnimation(.easeInOut(duration: 0.15)) {
-                                    selectedCategory = cat
-                                }
-                            }) {
-                                Text(cat)
-                                    .font(.system(size: 11, weight: selectedCategory == cat ? .semibold : .regular))
-                                    .foregroundColor(selectedCategory == cat ? .white : .white.opacity(0.4))
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        Capsule()
-                                            .fill(selectedCategory == cat ?
-                                                  Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.25) :
-                                                  Color.white.opacity(0.04))
-                                            .overlay(
-                                                Capsule()
-                                                    .stroke(selectedCategory == cat ?
-                                                            Color(red: 0.3, green: 0.6, blue: 1.0).opacity(0.3) :
-                                                            Color.white.opacity(0.06), lineWidth: 1)
-                                            )
-                                    )
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                }
-                .frame(maxWidth: 600)
-                
-                // Count
-                HStack {
-                    Text("\(filteredConjuncts.count)টি যুক্তবর্ণ")
-                        .font(.system(size: 11))
-                        .foregroundColor(.white.opacity(0.3))
-                    Spacer()
-                }
-                .frame(maxWidth: 600)
-                
-                // Grid
-                LazyVGrid(columns: [
-                    GridItem(.flexible(), spacing: 10),
-                    GridItem(.flexible(), spacing: 10),
-                    GridItem(.flexible(), spacing: 10)
-                ], spacing: 10) {
-                    ForEach(filteredConjuncts, id: \.0) { item in
-                        conjunctCard(letter: item.0, keys: item.1, example: item.2)
-                    }
-                }
-                .frame(maxWidth: 600)
-                .padding(.bottom, 28)
             }
-            .padding(.horizontal, 24)
-            .frame(maxWidth: .infinity)
+            .padding(.bottom, 16)
+            
+            // Count
+            Text("\(filteredConjuncts.count)টি যুক্তবর্ণ")
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(t.inkFaint)
+                .padding(.bottom, 12)
+            
+            // Grid
+            LazyVGrid(columns: [
+                GridItem(.flexible(), spacing: 10),
+                GridItem(.flexible(), spacing: 10),
+                GridItem(.flexible(), spacing: 10),
+                GridItem(.flexible(), spacing: 10)
+            ], spacing: 10) {
+                ForEach(filteredConjuncts, id: \.0) { item in
+                    conjunctCard(letter: item.0, keys: item.1, example: item.2)
+                }
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     func conjunctCard(letter: String, keys: String, example: String) -> some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             Text(letter)
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(Color(red: 0.5, green: 0.7, blue: 1.0))
-            
+                .font(.system(size: 26, weight: .bold))
+                .foregroundColor(t.accent)
             Text(keys)
                 .font(.system(size: 10, weight: .medium, design: .monospaced))
-                .foregroundColor(.white.opacity(0.7))
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
+                .foregroundColor(t.ink)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
                 .background(
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.white.opacity(0.06))
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(t.panel2)
+                        .overlay(RoundedRectangle(cornerRadius: 6).stroke(t.line, lineWidth: 1))
                 )
-            
             Text(example)
-                .font(.system(size: 10))
-                .foregroundColor(.white.opacity(0.35))
+                .font(.system(size: 12.5))
+                .foregroundColor(t.inkFaint)
                 .lineLimit(1)
         }
-        .padding(12)
+        .padding(14)
         .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white.opacity(0.03))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.white.opacity(0.06), lineWidth: 1)
-                )
+            RoundedRectangle(cornerRadius: 12)
+                .fill(t.panel)
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(t.line, lineWidth: 1))
         )
     }
 }

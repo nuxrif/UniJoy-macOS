@@ -2,393 +2,268 @@ import SwiftUI
 
 struct InstallView: View {
     @ObservedObject var manager: KeyboardLayoutManager
+    @EnvironmentObject var themeManager: ThemeManager
     var reopenWelcome: () -> Void = {}
-    @State private var animateGlow: Bool = false
+    
+    var t: TC { TC(isDark: themeManager.isDark) }
     
     var body: some View {
-        VStack(spacing: 16) {
-                Spacer(minLength: 10)
-                
-                // Header
-                VStack(spacing: 4) {
-                    Text("ইনস্টলেশন")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                    
-                    Text("ওয়ান-ক্লিক অটো ইনস্টল — সবকিছু স্বয়ংক্রিয়!")
-                        .font(.system(size: 12))
-                        .foregroundColor(.white.opacity(0.5))
+        VStack(alignment: .leading, spacing: 0) {
+            // Status Card
+            HStack(spacing: 18) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(t.accent)
+                        .frame(width: 52, height: 52)
+                    Image(systemName: "keyboard")
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundColor(t.accentInk)
                 }
-                .padding(.top, 10)
-                
-                // Status Card
-                VStack(spacing: 10) {
-                    ZStack {
-                        Circle()
-                            .fill(
-                                manager.isInstalled ?
-                                RadialGradient(colors: [Color.green.opacity(0.3), Color.clear], center: .center, startRadius: 0, endRadius: 40) :
-                                RadialGradient(colors: [Color.orange.opacity(0.3), Color.clear], center: .center, startRadius: 0, endRadius: 40)
-                            )
-                            .frame(width: 80, height: 80)
-                            .scaleEffect(animateGlow ? 1.2 : 1.0)
-                            .animation(.easeInOut(duration: 2).repeatForever(autoreverses: true), value: animateGlow)
-                        
-                        ZStack {
-                            Circle()
-                                .fill(Color.white.opacity(0.06))
-                                .frame(width: 54, height: 54)
-                            
-                            Image(systemName: manager.isInstalled ? "checkmark.circle.fill" : "arrow.down.circle")
-                                .font(.system(size: 26, weight: .light))
-                                .foregroundColor(manager.isInstalled ? .green : .orange)
-                        }
-                    }
-                    .onAppear { animateGlow = true }
-                    
+                VStack(alignment: .leading, spacing: 3) {
                     Text(manager.isInstalled ? "ইনস্টল করা আছে" : "ইনস্টল করা হয়নি")
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundColor(.white)
-                    
-                    // Health Dashboard
-                    if manager.isInstalled {
-                        VStack(spacing: 4) {
-                            healthRow(
-                                icon: "doc.fill",
-                                title: "লেআউট ফাইল",
-                                status: "ইনস্টল আছে",
-                                ok: true
-                            )
-                            healthRow(
-                                icon: "square.and.pencil",
-                                title: "সিস্টেম রেজিস্ট্রেশন",
-                                status: "রেজিস্টার্ড",
-                                ok: true
-                            )
-                            healthRow(
-                                icon: "power.circle.fill",
-                                title: "ইনপুট সোর্স",
-                                status: manager.isInputSourceEnabled ? "সক্রিয়" : "নিষ্ক্রিয়",
-                                ok: manager.isInputSourceEnabled
-                            )
-                            
-                            // Login Items row
-                            healthRow(
-                                icon: "person.crop.circle.badge.clock",
-                                title: "Login Items",
-                                status: manager.isLoginItemEnabled ? "যোগ আছে" : "যোগ নেই",
-                                ok: manager.isLoginItemEnabled,
-                                fixAction: manager.isLoginItemEnabled ? nil : { manager.enableLoginItem() }
-                            )
-                        }
-                    } else {
-                        VStack(spacing: 4) {
-                            autoFeature(icon: "doc.on.doc", text: "ফাইল অটো কপি হবে")
-                            autoFeature(icon: "keyboard", text: "কীবোর্ড অটো রেজিস্টার হবে")
-                            autoFeature(icon: "power", text: "ইনপুট সোর্স অটো সক্রিয় হবে")
-                            autoFeature(icon: "hand.tap", text: "কোনো ম্যানুয়াল সেটিং লাগবে না!")
-                        }
-                    }
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(t.ink)
+                    Text("UniJoy v1.0.0 · ইউনিজয় কীবোর্ড সক্রিয় ও ব্যবহারের জন্য প্রস্তুত")
+                        .font(.system(size: 13))
+                        .foregroundColor(t.inkSoft)
                 }
-                .padding(18)
-                .frame(width: 480)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.white.opacity(0.03))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color.white.opacity(0.06), lineWidth: 1)
-                        )
-                )
-                
-                // Action Buttons
-                HStack(spacing: 10) {
-                    if !manager.isInstalled {
-                        actionButton(
-                            title: "⚡ ওয়ান-ক্লিক ইনস্টল",
-                            icon: "bolt.circle.fill",
-                            gradient: [Color(red: 0.2, green: 0.7, blue: 0.4), Color(red: 0.1, green: 0.5, blue: 0.3)],
-                            isLoading: manager.isProcessing
-                        ) {
-                            manager.install()
-                        }
-                    } else {
-                        actionButton(
-                            title: "আনইনস্টল",
-                            icon: "trash.circle.fill",
-                            gradient: [Color(red: 0.8, green: 0.2, blue: 0.2), Color(red: 0.6, green: 0.1, blue: 0.1)],
-                            isLoading: manager.isProcessing
-                        ) {
-                            manager.uninstall()
-                        }
-                        
-                        actionButton(
-                            title: "পুনরায় ইনস্টল",
-                            icon: "arrow.triangle.2.circlepath",
-                            gradient: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.4, green: 0.2, blue: 0.9)],
-                            isLoading: false
-                        ) {
-                            manager.uninstall()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                manager.install()
-                            }
-                        }
-                        
-                        Button(action: { manager.switchToBangla() }) {
-                            HStack(spacing: 6) {
-                                Text("ক")
-                                    .font(.system(size: 13, weight: .bold))
-                                Text("সুইচ করুন")
-                                    .font(.system(size: 11, weight: .medium))
-                            }
-                            .foregroundColor(Color(red: 0.5, green: 0.7, blue: 1.0))
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.1))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.2), lineWidth: 1)
-                                    )
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Button(action: { manager.openKeyboardPreferences() }) {
-                            HStack(spacing: 6) {
-                                Image(systemName: "gear")
-                                    .font(.system(size: 11))
-                                Text("Settings")
-                                    .font(.system(size: 11, weight: .medium))
-                            }
-                            .foregroundColor(.white.opacity(0.5))
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.white.opacity(0.04))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                                    )
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
+                Spacer()
+                HStack(spacing: 7) {
+                    Circle()
+                        .fill(manager.isInstalled ? t.good : t.warn)
+                        .frame(width: 7, height: 7)
+                    Text(manager.isInstalled ? "সক্রিয়" : "নিষ্ক্রিয়")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(manager.isInstalled ? t.good : t.warn)
                 }
-                
-                // Status Message
-                if !manager.statusMessage.isEmpty {
-                    HStack(alignment: .top, spacing: 10) {
-                        if manager.isProcessing {
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                                .scaleEffect(0.6)
-                                .tint(.white)
-                        }
-                        
-                        Text(manager.statusMessage)
-                            .font(.system(size: 13))
-                            .foregroundColor(.white.opacity(0.7))
-                            .lineSpacing(3)
-                    }
-                    .padding(16)
-                    .frame(width: 480)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.white.opacity(0.04))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.white.opacity(0.06), lineWidth: 1)
-                            )
-                    )
-                    .transition(.opacity.combined(with: .move(edge: .bottom)))
-                    .animation(.easeInOut, value: manager.statusMessage)
-                }
-                
-                // What happens automatically
-                autoStepsSection
-                    .frame(width: 480)
-                
-                // Reopen welcome
-                Button(action: reopenWelcome) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "wand.and.stars")
-                            .font(.system(size: 12))
-                        Text("সেটআপ উইজার্ড আবার দেখুন")
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .foregroundColor(.white.opacity(0.3))
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.white.opacity(0.04))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.white.opacity(0.06), lineWidth: 1)
-                            )
-                    )
-                }
-                .buttonStyle(.plain)
-                
-                Spacer(minLength: 20)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(20)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(t.panel)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(t.line, lineWidth: 1))
+            )
+            
+            // Section: System Status
+            sectionHeader("সিস্টেম স্ট্যাটাস", tag: "STATUS")
+            
+            VStack(spacing: 0) {
+                healthRow(icon: "doc.fill", title: "লেআউট ফাইল", status: "ইনস্টল আছে", ok: true)
+                Divider().foregroundColor(t.line)
+                healthRow(icon: "square.and.pencil", title: "সিস্টেম রেজিস্ট্রেশন", status: "রেজিস্টার্ড", ok: true)
+                Divider().foregroundColor(t.line)
+                healthRow(icon: "bolt.fill", title: "ইনপুট সোর্স", status: manager.isInputSourceEnabled ? "সক্রিয়" : "নিষ্ক্রিয়", ok: manager.isInputSourceEnabled)
+                Divider().foregroundColor(t.line)
+                healthRow(icon: "person.crop.circle", title: "Login Items", status: manager.isLoginItemEnabled ? "যোগ আছে" : "যোগ নেই", ok: manager.isLoginItemEnabled)
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(t.panel)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(t.line, lineWidth: 1))
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+            // Action Buttons
+            HStack(spacing: 10) {
+                if !manager.isInstalled {
+                    actionBtn(title: "⚡ ওয়ান-ক্লিক ইনস্টল", style: .accent) { manager.install() }
+                } else {
+                    actionBtn(title: "ক সুইচ করুন", style: .accent) { manager.switchToBangla() }
+                    actionBtn(title: "পুনরায় ইনস্টল", style: .neutral) {
+                        manager.uninstall()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { manager.install() }
+                    }
+                    actionBtn(title: "আনইনস্টল", style: .danger) { manager.uninstall() }
+                    actionBtn(title: "Settings", style: .ghost) { manager.openKeyboardPreferences() }
+                }
+            }
+            .padding(.top, 18)
+            
+            // Status Message
+            if !manager.statusMessage.isEmpty {
+                HStack(alignment: .top, spacing: 10) {
+                    if manager.isProcessing {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .scaleEffect(0.6)
+                    }
+                    Text(manager.statusMessage)
+                        .font(.system(size: 13))
+                        .foregroundColor(t.inkSoft)
+                        .lineSpacing(3)
+                }
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(t.panel)
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(t.line, lineWidth: 1))
+                )
+                .padding(.top, 14)
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                .animation(.easeInOut, value: manager.statusMessage)
+            }
+            
+            // Section: Auto Steps
+            sectionHeader("অটো ইনস্টলে কী হয়?", tag: "AUTO SETUP")
+            
+            LazyVGrid(columns: [
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12)
+            ], spacing: 12) {
+                stepItem(number: "১", text: "কীবোর্ড লেআউট ফাইল সিস্টেমে কপি হয়", icon: "doc.fill", done: manager.isInstalled)
+                stepItem(number: "২", text: "macOS-এ ইনপুট সোর্স রেজিস্টার হয়", icon: "square.and.pencil", done: manager.isInstalled)
+                stepItem(number: "৩", text: "ইউনিজয় কীবোর্ড অটো সক্রিয় হয়", icon: "power", done: manager.isInputSourceEnabled)
+                stepItem(number: "৪", text: "মেনু বারে Globe দিয়ে সুইচ করুন!", icon: "globe", done: false)
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(t.panel)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(t.line, lineWidth: 1))
+            )
+            
+            // Wizard button
+            Button(action: reopenWelcome) {
+                HStack(spacing: 8) {
+                    Image(systemName: "wand.and.stars")
+                        .font(.system(size: 13))
+                    Text("সেটআপ উইজার্ড আবার দেখুন")
+                        .font(.system(size: 14, weight: .medium))
+                }
+                .foregroundColor(t.inkSoft)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(t.panel)
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(t.line, lineWidth: 1))
+                )
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 18)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    func healthRow(icon: String, title: String, status: String, ok: Bool, fixAction: (() -> Void)? = nil) -> some View {
-        HStack(spacing: 12) {
+    // MARK: - Section Header
+    func sectionHeader(_ title: String, tag: String) -> some View {
+        HStack(spacing: 9) {
+            Text(title)
+                .font(.system(size: 17, weight: .bold))
+                .foregroundColor(t.ink)
+            Spacer()
+            Text(tag)
+                .font(.system(size: 10.5, weight: .medium, design: .monospaced))
+                .foregroundColor(t.inkFaint)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 99)
+                        .stroke(t.line, lineWidth: 1)
+                )
+        }
+        .padding(.top, 26)
+        .padding(.bottom, 13)
+    }
+    
+    // MARK: - Health Row
+    func healthRow(icon: String, title: String, status: String, ok: Bool) -> some View {
+        HStack(spacing: 14) {
             Image(systemName: icon)
                 .font(.system(size: 14))
-                .foregroundColor(ok ? Color.green : Color.orange)
-                .frame(width: 20)
-            
+                .foregroundColor(t.inkFaint)
+                .frame(width: 18)
             Text(title)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(.white.opacity(0.6))
-            
+                .font(.system(size: 14.5, weight: .medium))
+                .foregroundColor(t.ink)
             Spacer()
-            
-            if let fixAction = fixAction {
-                Button(action: fixAction) {
-                    HStack(spacing: 3) {
-                        Image(systemName: "wrench.fill")
-                            .font(.system(size: 8))
-                        Text("Fix")
-                            .font(.system(size: 10, weight: .semibold))
-                    }
-                    .foregroundColor(.orange)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Color.orange.opacity(0.1))
-                    .cornerRadius(6)
-                }
-                .buttonStyle(.plain)
-                .padding(.trailing, 4)
-            }
-            
-            HStack(spacing: 4) {
-                Circle()
-                    .fill(ok ? Color.green : Color.orange)
-                    .frame(width: 5, height: 5)
+            HStack(spacing: 6) {
+                Image(systemName: "checkmark")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(ok ? t.good : t.warn)
                 Text(status)
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(ok ? Color.green.opacity(0.8) : Color.orange.opacity(0.8))
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(ok ? t.good : t.warn)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(
-                Capsule()
-                    .fill(ok ? Color.green.opacity(0.1) : Color.orange.opacity(0.1))
-            )
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.white.opacity(0.03))
-        )
-        .frame(maxWidth: 320)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 14)
     }
     
-    func autoFeature(icon: String, text: String) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 12))
-                .foregroundColor(Color(red: 0.4, green: 0.8, blue: 0.5))
-                .frame(width: 16)
-            Text(text)
-                .font(.system(size: 12))
-                .foregroundColor(.white.opacity(0.5))
-            Spacer()
-        }
-        .frame(maxWidth: 260)
-    }
-    
-    func actionButton(title: String, icon: String, gradient: [Color], isLoading: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack(spacing: 8) {
-                if isLoading {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .scaleEffect(0.6)
-                        .tint(.white)
-                } else {
-                    Image(systemName: icon)
-                        .font(.system(size: 14))
-                }
-                Text(title)
-                    .font(.system(size: 12, weight: .semibold))
-            }
-            .foregroundColor(.white)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(LinearGradient(colors: gradient, startPoint: .leading, endPoint: .trailing))
-                    .shadow(color: gradient[0].opacity(0.3), radius: 6, x: 0, y: 3)
-            )
-        }
-        .buttonStyle(.plain)
-        .disabled(isLoading)
-    }
-    
-    var autoStepsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 8) {
-                Image(systemName: "wand.and.stars")
-                    .font(.system(size: 13))
-                    .foregroundColor(Color(red: 0.5, green: 0.7, blue: 1.0))
-                Text("অটো ইনস্টলে কী হয়?")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(.white)
-            }
-            
-            stepItem(number: "1", text: "কীবোর্ড লেআউট ফাইল সিস্টেমে কপি হয়", icon: "doc.fill", done: manager.isInstalled)
-            stepItem(number: "2", text: "macOS-এ ইনপুট সোর্স রেজিস্টার হয়", icon: "square.and.pencil", done: manager.isInstalled)
-            stepItem(number: "3", text: "ইউনিজয় কীবোর্ড অটো সক্রিয় হয়", icon: "power", done: manager.isInputSourceEnabled)
-            stepItem(number: "4", text: "মেনু বারে 🌐 দিয়ে সুইচ করুন!", icon: "globe", done: false)
-        }
-        .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.03))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.06), lineWidth: 1)
-                )
-        )
-    }
-    
+    // MARK: - Step Item
     func stepItem(number: String, text: String, icon: String, done: Bool) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             ZStack {
-                Circle()
-                    .fill(done ? Color.green.opacity(0.2) : Color(red: 0.2, green: 0.5, blue: 1.0).opacity(0.2))
-                    .frame(width: 28, height: 28)
-                
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(done ? t.accent : t.accentSoft)
+                    .frame(width: 30, height: 30)
                 if done {
                     Image(systemName: "checkmark")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(.green)
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(t.accentInk)
                 } else {
                     Text(number)
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(red: 0.5, green: 0.7, blue: 1.0))
+                        .font(.system(size: 13, weight: .bold, design: .monospaced))
+                        .foregroundColor(t.accent)
                 }
             }
-            
             Image(systemName: icon)
-                .font(.system(size: 12))
-                .foregroundColor(.white.opacity(0.3))
+                .font(.system(size: 13))
+                .foregroundColor(t.inkFaint)
                 .frame(width: 16)
-            
             Text(text)
                 .font(.system(size: 13))
-                .foregroundColor(done ? .white.opacity(0.4) : .white.opacity(0.6))
-                .strikethrough(done, color: .white.opacity(0.2))
+                .foregroundColor(done ? t.inkFaint : t.inkSoft)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 8)
+    }
+    
+    // MARK: - Button Styles
+    enum BtnStyle { case accent, neutral, danger, ghost }
+    
+    func actionBtn(title: String, style: BtnStyle, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .foregroundColor(btnFg(style))
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(btnBg(style))
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(btnBorder(style), lineWidth: 1))
+                )
+        }
+        .buttonStyle(.plain)
+        .disabled(manager.isProcessing)
+    }
+    
+    func btnFg(_ s: BtnStyle) -> Color {
+        switch s {
+        case .accent: return t.accentInk
+        case .neutral: return t.inkSoft
+        case .danger: return t.danger
+        case .ghost: return t.accent
+        }
+    }
+    func btnBg(_ s: BtnStyle) -> Color {
+        switch s {
+        case .accent: return t.accent
+        case .neutral: return t.panel
+        case .danger: return t.panel
+        case .ghost: return Color.clear
+        }
+    }
+    func btnBorder(_ s: BtnStyle) -> Color {
+        switch s {
+        case .accent: return t.accent
+        case .neutral: return t.line
+        case .danger: return t.line
+        case .ghost: return t.accent.opacity(0.4)
         }
     }
 }
